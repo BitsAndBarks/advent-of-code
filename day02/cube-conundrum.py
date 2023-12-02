@@ -17,7 +17,7 @@ def read_games_from_file(file_path):
 def parse_game_line(line):
     game_id, rounds = line.split(':')
     rounds = rounds.strip().split(';')
-    round_results = []  # contains results of each round of a game [(res_r1},{res_r2},{res_r3}]
+    round_results = []  # contains results of each round of a game [{res_r1},{res_r2},{res_r3}]
 
     for round_result in rounds:
         round_dict = {}
