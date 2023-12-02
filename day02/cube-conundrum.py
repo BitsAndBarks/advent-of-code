@@ -10,7 +10,6 @@ def read_games_from_file(file_path):
         for line in file:
             game_id, round_results = parse_game_line(line)
             games_dict[game_id] = round_results
-
     return games_dict
 
 
@@ -27,7 +26,6 @@ def parse_game_line(line):
             count, colour = item.split()
             round_dict[colour] = int(count)
         round_results.append(round_dict)
-
     return int(game_id.split()[1]), round_results
 
 
@@ -56,15 +54,35 @@ def sum_of_possible_games_ids(games):
     return sum(possible)
 
 
-# calculates sum of id's of possible games
-def sum_of_possible_games_ids_from_file(file_path):
-    games = read_games_from_file(file_path)
-    return sum_of_possible_games_ids(games)
+# calculates minimum amount of required balls per game, includes all games
+def min_balls_per_game(game_results):
+    min_balls = {'red': 0, 'green': 0, 'blue': 0}
+    for round_result in game_results:
+        for color in min_balls.keys():
+            min_balls[color] = max(min_balls[color], round_result.get(color, 0))
+    return min_balls
+
+
+# calculates power of each minimum set and sums up the results
+def product_of_minimum_balls(games):
+    total_product_sum = 0
+    for game_results in games.values():
+        min_balls = min_balls_per_game(game_results)
+        product = min_balls['red'] * min_balls['green'] * min_balls['blue']
+        total_product_sum += product
+    return total_product_sum
 
 
 def main():
-    sum_of_ids = sum_of_possible_games_ids_from_file(game_file)
-    print(sum_of_ids)
+    games = read_games_from_file(game_file)
+
+    # part 1
+    sum_of_ids = sum_of_possible_games_ids(games)
+    print('Sum of id\'s:', sum_of_ids)
+
+    # part 2
+    total_product_sum = product_of_minimum_balls(games)
+    print('Sum of powers:', total_product_sum)
 
 
 if __name__ == "__main__":
